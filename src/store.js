@@ -13,9 +13,30 @@ export default new Vuex.Store({
     isLoginError: false
   },
   mutations: {
-
+    //ログインが成功した時
+    loginSuccess(state) {
+      state.isLogin = true
+      state.isLoginError = false
+    },
+    //ログインに失敗した時
+    loginFail(state) {
+      state.isLogin = false
+      state.isLoginError = true
+    }
   },
   actions: {
-
-  }
+      //ログインを試みる
+      login({state, commit}, Obj) {
+      
+        let selectedUser = null
+        state.allUsers.forEach(user => {
+            if(user.email === Obj.email) selectedUser = user
+        })
+        selectedUser === null 
+         ? commit("loginFail")
+         : selectedUser.password !== Obj.password
+            ? commit("loginFail")
+            : commit("loginSuccess")
+        }
+      }
 })

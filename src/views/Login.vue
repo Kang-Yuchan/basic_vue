@@ -3,13 +3,13 @@
        <v-layout align-center row wrap>
            <v-flex xs12>
                <v-alert
-                :value="isError"
+                :value="isLoginError"
                 type="error"
                 >
                 emailとパスワードを確認してください。
                 </v-alert>
                 <v-alert
-                :value="loginSuccess"
+                :value="isLogin"
                 type="success"
                 >
                ログインが完了されました。
@@ -26,7 +26,10 @@
                    <v-btn 
                    color="primary"
                    large
-                   @click="login()"
+                   @click="login({
+                       email: email,
+                       password: password
+                   })"
                    block
                    >
                    ログイン
@@ -41,28 +44,20 @@
 </template>
 
 <script>
+import { mapState, mapActions } from "vuex"
+
 export default {
     data() {
         return {
             email: null,
-            password: null,
-           
-            isError: false,
-            loginSuccess: false
+            password: null
         }
     },
+    computed: {
+        ...mapState(["isLogin", "isLoginError"])
+    },
     methods: {
-        login() {
-            let selectedUser = null
-            this.allUsers.forEach(user => {
-                if(user.email === this.email) selectedUser = user
-            })
-            selectedUser === null 
-             ? (this.isError = true)
-             : selectedUser.password !== this.password
-                ? (this.isError = true)
-                : (this.loginSuccess = true)
-        }
+        ...mapActions(["login"])
     }
 }
 </script>
